@@ -6,6 +6,7 @@ Helper functions for transport components to handle message framing
 from __future__ import absolute_import, print_function, unicode_literals
 import salt.utils.msgpack
 from salt.ext import six
+from salt.utils.odict import OrderedDict
 
 
 def frame_msg(body, header=None, raw_body=False):  # pylint: disable=unused-argument
@@ -65,7 +66,7 @@ def _decode_embedded_dict(src):
     Convert enbedded bytes to strings if possible.
     Dict helper.
     '''
-    output = {}
+    output = OrderedDict()
     for key, val in six.iteritems(src):
         if isinstance(val, dict):
             val = _decode_embedded_dict(val)

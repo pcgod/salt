@@ -19,6 +19,7 @@ import salt.utils.immutabletypes as immutabletypes
 import salt.utils.stringutils
 from salt.exceptions import SaltReqTimeoutError
 from salt.utils.data import CaseInsensitiveDict
+from salt.utils.odict import OrderedDict
 
 # Import third party libs
 from salt.ext import six
@@ -154,13 +155,15 @@ class Serial(object):
                     ret = salt.utils.msgpack.loads(msg, use_list=True,
                                                    ext_hook=ext_type_decoder,
                                                    encoding=encoding,
+                                                   object_pairs_hook=OrderedDict,
                                                    _msgpack_module=msgpack)
                 except UnicodeDecodeError:
                     # msg contains binary data
-                    ret = msgpack.loads(msg, use_list=True, ext_hook=ext_type_decoder)
+                    ret = msgpack.loads(msg, use_list=True, ext_hook=ext_type_decoder, object_pairs_hook=OrderedDict)
             else:
                 ret = salt.utils.msgpack.loads(msg, use_list=True,
                                                ext_hook=ext_type_decoder,
+                                               object_pairs_hook=OrderedDict,
                                                _msgpack_module=msgpack)
             if six.PY3 and encoding is None and not raw:
                 ret = salt.transport.frame.decode_embedded_strs(ret)
